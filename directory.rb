@@ -14,12 +14,12 @@ def load_students(filename = "students.csv")
   file = File.open(filename, "r")
   file.readlines.each do |line|
     name, cohort = line.chomp.split(',')
-    @students << {name: name, cohort: cohort.to_sym}
+    add_student
   end 
   file.close
 end 
 
-def try_load_students
+def try_load_students(filename = "students.csv")
   filename = ARGV.first
   return if filename.nil?
   if File.exists?(filename)
@@ -31,6 +31,10 @@ def try_load_students
   end 
 end 
 
+def add_student
+  @students << {name: name, cohort: cohort.to_sym}
+end 
+
 def input_students
   puts "Please enter the cohort then the names of the students"
   puts "To finish, just hit return twice"
@@ -38,7 +42,7 @@ def input_students
   name = STDIN.gets.chomp
   
   while !name.empty? do
-    @students << {name: name, cohort: cohort.to_sym}
+    add_student
     puts "Now we have #{@students.count} students"
     name = STDIN.gets.chomp
   end 
@@ -86,13 +90,17 @@ end
 def process(selection)
   case selection
     when "1"
+      puts "INPUT STUDENTS SELECTED"
       input_students
     when "2"
+      puts "SHOW STUDENTS SELECTED"
       show_students
     when "3"
       save_students
+      puts "STUDENT LIST SAVED"
     when "4"
       load_students
+      "STUDENT LIST LOADED"
     when "9"
       exit
     else 
